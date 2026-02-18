@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div>
+    <form action="{% url 'delete-room' room.id %}" method="POST">
+        {% csrf_token %}
+        <p>Are you sure you want to delete "{{room.name}}"?</p>
+        <a href="{{request.META.HTTP_REFERER}}">Cancel</a> <!-- this is used to go back to the previous page -->
+        <input type="submit" value="Confirm Delete">
+    </form>
+</div>
+
+{% endblock %}
