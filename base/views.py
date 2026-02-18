@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -48,7 +48,18 @@ def home(request):
 
 def room(request,pk):
     room = Room.objects.get(id=int(pk))
-    context = {'room':room}
+    room_messages = room.message_set.all().order_by('-created') # this means getting the particular messages belogns to this room
+    participants = room.participants.all()
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('body')
+        ) 
+        room.participants.add(request.user)  # this helps that when evver the user messages here that user is a participant of this room for this room
+        return redirect('room', pk=room.id)
+
+    context = {'room':room, 'room_messages':room_messages, 'participants':participants}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
@@ -86,11 +97,9 @@ def deleteRoom(request, pk):
     if request.method == 'POST':
         room.delete() # this is used to delete the data from the model
         return redirect('home')
-    context = {'room':room}
+    context = {'obj':room}
     return render(request, 'base/delete.html', context)
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
 
 def loginPage(request):
     page = 'login'
@@ -140,3 +149,17 @@ def registerPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
+
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    room_message = Message.objects.get(id=int(pk)) # this is used to get the data from the model
+    if request.user != room_message.user:
+        return HttpResponse('You are not authorized to delete this message')
+    
+    if request.method == 'POST':
+        room_message.delete() # this is used to delete the data from the model
+        return redirect('room', pk=room_message.room.id)
+    context = {'obj':room_message}
+    return render(request, 'base/delete.html', context)
+    

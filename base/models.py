@@ -17,6 +17,7 @@ class Room(models.Model):
     description = models.TextField(null=True, blank=True) # null for the database and blank which means it can be empty for the forms and also it will not throw an error if the field is empty
     updated = models.DateTimeField(auto_now=True) # auto_now=True means it will update the time every time the model is saved
     created = models.DateTimeField(auto_now_add=True) # auto_now_add=True means it will add the time only once when the model is created
+    participants = models.ManyToManyField(User, related_name='participants', blank=True) # this is used to store the participants of the room
     
     class Meta:
         ordering = ['-updated', '-created'] # this means the rooms will be ordered by the updated time and then by the created time in descending order
