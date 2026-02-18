@@ -33,17 +33,17 @@ from django.db.models import Q # this is used to filter the rooms by the topic n
 
 def home(request):
 
-    q = request.GET.get('q') # this is used to get the data from the URL
-    if q: # this checks if the get request is having any query parameter if having any 
-      #  rooms = Room.objects.filter(topic__name__icontains=q, name__icontains=q) # this is used to filter the rooms by the topic name
-        rooms = Room.objects.filter(Q(topic__name__icontains=q) |
-                                  Q(name__icontains=q) |
-                                  Q(description__icontains=q)) # this is used to filter the rooms by the topic name and the room name
-    else:
-        rooms = Room.objects.all()
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+
+    rooms = Room.objects.filter(Q(topic__name__icontains=q) |
+                                Q(name__icontains=q) |
+                                Q(description__icontains=q))
+
     topics = Topic.objects.all()
     rooms_count = rooms.count()
-    context = {'rooms':rooms, 'topics':topics, 'q':q, 'rooms_count':rooms_count}
+    recent_messages = Message.objects.filter(Q(room__name__icontains=q) | 
+                                                Q(room__topic__name__icontains=q))[:10]
+    context = {'rooms':rooms, 'topics':topics, 'q':q, 'rooms_count':rooms_count, 'recent_messages':recent_messages}
     return render(request, 'base/home.html', context)
 
 def room(request,pk):

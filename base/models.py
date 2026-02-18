@@ -32,6 +32,9 @@ class Message(models.Model):
     updated = models.DateTimeField(auto_now=True) # auto_now=True means it will update the time every time the model is saved
     created = models.DateTimeField(auto_now_add=True) # auto_now_add=True means it will add the time only once when the model is created
     
+
+    class Meta:
+        ordering = ['-updated', '-created'] # this means the messages will be ordered by the updated time and then by the created time in descending order
     def __str__(self):
         return self.body[:50]
 
