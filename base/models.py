@@ -39,3 +39,13 @@ class Message(models.Model):
         return self.body[:50]
 
 
+
+# In base/models.py
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', default='avatar.svg')
+
+    def __str__(self):
+        return self.user.username
+
