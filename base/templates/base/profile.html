@@ -4,10 +4,17 @@
 
 <!-- Profile Header -->
 <div class="profile-header">
-    <div class="profile-header__avatar">{{ user.username|make_list|first }}</div>
+    {% if profile.avatar and profile.avatar.name != 'avatar.svg' %}
+        <img src="{{ profile.avatar.url }}" alt="{{ user.username }}" class="profile-header__avatar profile-header__avatar--img">
+    {% else %}
+        <div class="profile-header__avatar">{{ user.username|make_list|first }}</div>
+    {% endif %}
     <h1 class="profile-header__name">{{ user.username }}</h1>
     <p class="profile-header__username">@{{ user.username }}</p>
-   {% if user.is_authenticated and user == request.user %}
+    {% if profile.bio %}
+        <p class="profile-header__bio">{{ profile.bio }}</p>
+    {% endif %}
+    {% if user.is_authenticated and user == request.user %}
     <a href="{% url 'update-user' %}" class="btn btn-primary">Edit Profile</a>
     {% endif %}
 </div>
@@ -16,14 +23,14 @@
 <div class="home-grid">
 
     <!-- Topics -->
-    <div>
+    <div class="home-grid__sidebar">
         <div class="topics-panel">
             {% include 'base/topics_component.html' %}
         </div>
     </div>
 
     <!-- User's Rooms -->
-    <div>
+    <div class="home-grid__feed">
         <div class="feed-header">
             <span class="feed-header__count">{{ user.username }}'s Rooms</span>
         </div>
@@ -33,7 +40,7 @@
     </div>
 
     <!-- User's Activity -->
-    <div>
+    <div class="home-grid__sidebar">
         <div class="activity-panel">
             {% include 'base/activity_component.html' %}
         </div>

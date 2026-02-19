@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Room, Topic, Message, User
+from .models import Room, Topic, Message, User, Profile
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import RoomForm, UserForm
+from .forms import RoomForm, UserForm, ProfileForm
 from django.db.models import Q # this is used to filter the rooms by the topic name
 
 
@@ -177,25 +177,32 @@ def deleteMessage(request, pk):
 
 def userProfile(request, pk):
     user = User.objects.get(id=int(pk))
+    # Get or create profile for the user
+    profile, created = Profile.objects.get_or_create(user=user)
     rooms = user.room_set.all()
     recent_messages = user.message_set.all()
     topics = Topic.objects.all()
-    context = {'user':user, 'rooms':rooms, 'recent_messages':recent_messages, 'topics':topics}
+    context = {'user':user, 'profile':profile, 'rooms':rooms, 'recent_messages':recent_messages, 'topics':topics}
     return render(request, 'base/profile.html', context)
 
 
 @login_required(login_url='login')
 def updateUser(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
     
-    form = UserForm(instance=request.user)
+    user_form = UserForm(instance=request.user)
+    profile_form = ProfileForm(instance=profile)
+    
     if request.method == 'POST':
-        # this is used to update the data from the model 
-        user = request.user
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            user = form.save(commit=False)
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
             user.username = user.username.lower()
             user.save()
+            profile_form.save()
+            messages.success(request, 'Profile updated successfully!')
             return redirect('user-profile', pk=user.id)
-    context = {'form':form}
+    
+    context = {'user_form': user_form, 'profile_form': profile_form}
     return render(request, 'base/update_profile.html', context)

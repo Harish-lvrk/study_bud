@@ -7,7 +7,11 @@
 
         <!-- Profile Avatar  -->
         <div class="settings-card__avatar-section">
-            <div class="settings-card__avatar">{{ request.user.username|make_list|first }}</div>
+            {% if request.user.profile.avatar and request.user.profile.avatar.name != 'avatar.svg' %}
+                <img src="{{ request.user.profile.avatar.url }}" alt="{{ request.user.username }}" class="settings-card__avatar settings-card__avatar--img">
+            {% else %}
+                <div class="settings-card__avatar">{{ request.user.username|make_list|first }}</div>
+            {% endif %}
             <h2 class="form-card__title">Update Profile</h2>
             <p class="settings-card__subtitle">@{{ request.user.username }}</p>
         </div>
@@ -15,7 +19,11 @@
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
-            {{ form.as_p }}
+            <!-- User fields -->
+            {{ user_form.as_p }}
+
+            <!-- Profile fields -->
+            {{ profile_form.as_p }}
 
             <div class="form-card__actions">
                 <a href="{% url 'user-profile' request.user.id %}" class="btn btn--ghost">Cancel</a>

@@ -1552,6 +1552,11 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto 0.75rem;
 }
 
+.profile-header__avatar--img {
+    object-fit: cover;
+    background: none;
+}
+
 .profile-header__name {
     font-family: var(--font-heading);
     font-size: 1.6rem;
@@ -1561,6 +1566,21 @@ h1, h2, h3, h4, h5, h6 {
 .profile-header__username {
     color: var(--clr-text-muted);
     font-size: 0.9rem;
+}
+
+.profile-header__bio {
+    color: var(--clr-text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+.settings-card__avatar--img {
+    object-fit: cover;
+    background: none;
 }
 
 /* ---------- Animations ---------- */
