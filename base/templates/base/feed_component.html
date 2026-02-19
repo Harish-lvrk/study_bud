@@ -3,7 +3,14 @@
     <div class="room-card__header">
         <div class="room-card__host">
             {% if room.host %}
-                <a href="{% url 'user-profile' room.host.id %}">@{{ room.host.username }}</a>
+                <a href="{% url 'user-profile' room.host.id %}" class="room-card__host-link">
+                    {% if room.host.profile.avatar and room.host.profile.avatar.name != 'avatar.svg' %}
+                        <img src="{{ room.host.profile.avatar.url }}" alt="{{ room.host.username }}" class="room-card__avatar room-card__avatar--img">
+                    {% else %}
+                        <div class="room-card__avatar">{{ room.host.username|make_list|first }}</div>
+                    {% endif %}
+                    @{{ room.host.username }}
+                </a>
             {% else %}
                 <span>@deleted</span>
             {% endif %}
