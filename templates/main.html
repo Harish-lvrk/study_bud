@@ -13,33 +13,100 @@
     <!-- Navbar -->
     {% include 'navbar.html' %}
 
-    <!-- Flash Messages -->
-    {% if messages %}
-    <div class="main-content">
+    <!-- Main Content -->
+    <div class="main-content fade-in">
         <div class="container">
+
+            <!-- Flash Messages -->
+            {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}
             </ul>
-        </div>
-    </div>
-    {% endif %}
+            {% endif %}
 
-    <!-- Main Content -->
-    <div class="main-content fade-in">
-        <div class="container">
             {% block content %}
             {% endblock %}
         </div>
     </div>
 
     <script>
+        // Dropdown close on outside click
         document.addEventListener('click', function(e) {
             document.querySelectorAll('.dropdown--open').forEach(function(d) {
                 if (!d.contains(e.target)) d.classList.remove('dropdown--open');
             });
         });
+
+        // Mobile drawer toggle
+        (function() {
+            var toggle = document.getElementById('menuToggle');
+            var drawer = document.getElementById('mobileDrawer');
+            var overlay = document.getElementById('drawerOverlay');
+            var close = document.getElementById('drawerClose');
+            if (!toggle || !drawer) return;
+
+            function openDrawer() {
+                drawer.classList.add('mobile-drawer--open');
+                overlay.classList.add('mobile-drawer-overlay--open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeDrawer() {
+                drawer.classList.remove('mobile-drawer--open');
+                overlay.classList.remove('mobile-drawer-overlay--open');
+                document.body.style.overflow = '';
+            }
+
+            toggle.addEventListener('click', openDrawer);
+            close.addEventListener('click', closeDrawer);
+            overlay.addEventListener('click', closeDrawer);
+        })();
+
+        // Mobile bottom tabs (home page)
+        (function() {
+            var tabs = document.getElementById('mobileTabs');
+            if (!tabs) return;
+            var buttons = tabs.querySelectorAll('.mobile-tabs__btn');
+            var panels = {
+                panelRooms: document.getElementById('panelRooms'),
+                panelTopics: document.getElementById('panelTopics'),
+                panelActivity: document.getElementById('panelActivity')
+            };
+            if (!panels.panelRooms) return;
+
+            // Set initial active panel (Rooms) on mobile
+            function isMobile() { return window.innerWidth <= 768; }
+            function setActivePanel(target) {
+                Object.keys(panels).forEach(function(key) {
+                    if (panels[key]) {
+                        panels[key].classList.toggle('mobile-panel--active', key === target);
+                    }
+                });
+            }
+
+            if (isMobile()) setActivePanel('panelRooms');
+            window.addEventListener('resize', function() {
+                if (isMobile()) {
+                    // Ensure at least one panel is active
+                    var hasActive = document.querySelector('.mobile-panel--active');
+                    if (!hasActive) setActivePanel('panelRooms');
+                }
+            });
+
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var target = this.dataset.panel;
+
+                    // Update active tab
+                    buttons.forEach(function(b) { b.classList.remove('mobile-tabs__btn--active'); });
+                    this.classList.add('mobile-tabs__btn--active');
+
+                    // Show/hide panels
+                    setActivePanel(target);
+                });
+            });
+        })();
     </script>
 
 </body>

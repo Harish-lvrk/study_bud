@@ -7,7 +7,31 @@
         <h2 class="form-card__title">🛸 Room Station</h2>
         <form action="" method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            <div class="form-group">
+                <label for="topic">Topic</label>
+                <div class="topic-select">
+                    <input required type="text" name="topic" id="topic"
+                           placeholder="Select or type a new topic..."
+                           value="{{ room.topic.name|default:'' }}" autocomplete="off">
+                    <div class="topic-select__dropdown" id="topicDropdown">
+                        {% for topic in topics %}
+                        <div class="topic-select__option" data-value="{{ topic.name }}">{{ topic.name }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <span class="form-group__hint">Choose from existing topics or type a new one</span>
+            </div>
+            <div class="form-group">
+                <label for="name">Room Name</label>
+                <input required type="text" name="name" id="name"
+                       placeholder="Give your room a name..."
+                       value="{{ room.name|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" rows="4"
+                          placeholder="What will you discuss here?">{{ room.description|default:'' }}</textarea>
+            </div>
             <div class="form-card__actions">
                 <a href="{{ request.META.HTTP_REFERER }}" class="btn btn--ghost">Cancel</a>
                 <input type="submit" value="Submit" class="form-card__submit">
@@ -15,5 +39,48 @@
         </form>
     </div>
 </div>
+
+<script>
+(function() {
+    var input = document.getElementById('topic');
+    var dropdown = document.getElementById('topicDropdown');
+    var options = dropdown.querySelectorAll('.topic-select__option');
+
+    function showDropdown() {
+        options.forEach(function(opt) { opt.style.display = ''; });
+        dropdown.classList.add('topic-select__dropdown--open');
+    }
+
+    function hideDropdown() {
+        setTimeout(function() {
+            dropdown.classList.remove('topic-select__dropdown--open');
+        }, 150);
+    }
+
+    function filterOptions() {
+        var val = input.value.toLowerCase();
+        var anyVisible = false;
+        options.forEach(function(opt) {
+            var match = opt.dataset.value.toLowerCase().indexOf(val) !== -1;
+            opt.style.display = match ? '' : 'none';
+            if (match) anyVisible = true;
+        });
+        if (!anyVisible) dropdown.classList.remove('topic-select__dropdown--open');
+        else dropdown.classList.add('topic-select__dropdown--open');
+    }
+
+    input.addEventListener('focus', showDropdown);
+    input.addEventListener('blur', hideDropdown);
+    input.addEventListener('input', filterOptions);
+
+    options.forEach(function(opt) {
+        opt.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            input.value = this.dataset.value;
+            dropdown.classList.remove('topic-select__dropdown--open');
+        });
+    });
+})();
+</script>
 
 {% endblock %}

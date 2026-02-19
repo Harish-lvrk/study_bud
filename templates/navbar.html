@@ -5,26 +5,71 @@
             🚀 <span>Study</span>Bud
         </a>
 
-        <!-- Search -->
+        <!-- Search (desktop) -->
         <form class="navbar__search" action="{% url 'home' %}" method="GET">
             <input type="text" name="q" placeholder="Search rooms & topics..." value="{{ q }}">
         </form>
 
-        <!-- User Actions -->
+        <!-- User Actions (desktop) -->
         <div class="navbar__actions">
             {% if request.user.is_authenticated %}
                 <div class="navbar__user">
                     <a href="{% url 'user-profile' request.user.id %}">
                         <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
                     </a>
-                    <span>
+                    <span class="navbar__username">
                         <strong>{{ request.user.username }}</strong>
                     </span>
                 </div>
+                <a href="{% url 'update-user' %}" class="btn btn--ghost btn--sm" title="Settings">⚙️</a>
                 <a href="{% url 'logout' %}" class="btn btn--ghost btn--sm">Logout</a>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn--primary btn--sm">Login</a>
             {% endif %}
         </div>
+
+        <!-- Hamburger Button (mobile) -->
+        <button class="navbar__hamburger" id="menuToggle" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </nav>
+
+<!-- Mobile Drawer Overlay -->
+<div class="mobile-drawer-overlay" id="drawerOverlay"></div>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer__header">
+        <span class="mobile-drawer__title">Menu</span>
+        <button class="mobile-drawer__close" id="drawerClose">✕</button>
+    </div>
+
+    <!-- Mobile Search -->
+    <form class="mobile-drawer__search" action="{% url 'home' %}" method="GET">
+        <input type="text" name="q" placeholder="Search rooms & topics..." value="{{ q }}">
+    </form>
+
+    <!-- Mobile Nav Links -->
+    <div class="mobile-drawer__nav">
+        <a href="{% url 'home' %}" class="mobile-drawer__link">🏠 Home</a>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'user-profile' request.user.id %}" class="mobile-drawer__link">👤 Profile</a>
+            <a href="{% url 'create-room' %}" class="mobile-drawer__link">➕ Create Room</a>
+            <a href="{% url 'update-user' %}" class="mobile-drawer__link">⚙️ Settings</a>
+            <a href="{% url 'logout' %}" class="mobile-drawer__link mobile-drawer__link--danger">🚪 Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="mobile-drawer__link">🔑 Login</a>
+            <a href="{% url 'register' %}" class="mobile-drawer__link">📝 Register</a>
+        {% endif %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="mobile-drawer__footer">
+        <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+        <span><strong>{{ request.user.username }}</strong></span>
+    </div>
+    {% endif %}
+</div>
