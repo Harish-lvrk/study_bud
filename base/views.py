@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Room, Topic, Message
+from .models import Room, Topic, Message, User
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -163,3 +163,11 @@ def deleteMessage(request, pk):
     context = {'obj':room_message}
     return render(request, 'base/delete.html', context)
     
+
+def userProfile(request, pk):
+    user = User.objects.get(id=int(pk))
+    rooms = user.room_set.all()
+    recent_messages = user.message_set.all()
+    topics = Topic.objects.all()
+    context = {'user':user, 'rooms':rooms, 'recent_messages':recent_messages, 'topics':topics}
+    return render(request, 'base/profile.html', context)

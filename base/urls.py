@@ -12,7 +12,7 @@ urlpatterns = [
     
     path('logout/',views.logoutUser, name = "logout"),
     path('delete-message/<str:pk>/',views.deleteMessage, name = "delete-message"),
-
+    path('profile/<int:pk>/',views.userProfile, name = "user-profile"),
 
 ]
 
