@@ -46,7 +46,11 @@
         <div class="chat-card__messages">
             {% for message in room_messages %}
             <div class="chat-msg">
-                <div class="chat-msg__avatar">{{ message.user.username|make_list|first }}</div>
+                {% if message.user.profile.avatar and message.user.profile.avatar.name != 'avatar.svg' %}
+                    <img src="{{ message.user.profile.avatar.url }}" alt="{{ message.user.username }}" class="chat-msg__avatar chat-msg__avatar--img">
+                {% else %}
+                    <div class="chat-msg__avatar">{{ message.user.username|make_list|first }}</div>
+                {% endif %}
                 <div class="chat-msg__content">
                     <div class="chat-msg__header">
                         <a href="{% url 'user-profile' message.user.id %}" class="chat-msg__user">@{{ message.user.username }}</a>
@@ -86,7 +90,11 @@
         <div class="participants-card__list">
             {% for user in participants %}
             <a href="{% url 'user-profile' user.id %}" class="participant-row">
-                <div class="participant-avatar">{{ user.username|make_list|first }}</div>
+                {% if user.profile.avatar and user.profile.avatar.name != 'avatar.svg' %}
+                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="participant-avatar participant-avatar--img">
+                {% else %}
+                    <div class="participant-avatar">{{ user.username|make_list|first }}</div>
+                {% endif %}
                 <div class="participant-info">
                     <span class="participant-info__name">{{ user.username }}</span>
                     <span class="participant-info__handle">@{{ user.username }}</span>

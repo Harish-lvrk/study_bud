@@ -191,6 +191,11 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+.navbar__avatar--img {
+    object-fit: cover;
+    background: none;
+}
+
 /* Mobile nav toggle */
 .navbar__toggle {
     display: none;
@@ -1033,6 +1038,11 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 0.15rem;
 }
 
+.chat-msg__avatar--img {
+    object-fit: cover;
+    background: none;
+}
+
 .chat-msg__content {
     flex: 1;
     min-width: 0;
@@ -1208,6 +1218,11 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--clr-bg);
     text-transform: uppercase;
     flex-shrink: 0;
+}
+
+.participant-avatar--img {
+    object-fit: cover;
+    background: none;
 }
 
 .participant-info {
