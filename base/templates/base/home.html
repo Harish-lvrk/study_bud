@@ -5,14 +5,14 @@
 <div class="home-grid">
 
     <!-- Left Sidebar: Topics -->
-    <div>
+    <div class="home-grid__sidebar" id="panelTopics">
         <div class="topics-panel">
             {% include 'base/topics_component.html' %}
         </div>
     </div>
 
     <!-- Center: Feed -->
-    <div>
+    <div class="home-grid__feed" id="panelRooms">
         <div class="feed-header">
             <span class="feed-header__count">{{ rooms_count }} rooms available</span>
             <a href="{% url 'create-room' %}" class="btn btn--primary btn--sm">+ Create Room</a>
@@ -23,12 +23,25 @@
     </div>
 
     <!-- Right Sidebar: Activity -->
-    <div>
+    <div class="home-grid__sidebar" id="panelActivity">
         <div class="activity-panel">
             {% include 'base/activity_component.html' %}
         </div>
     </div>
 
+</div>
+
+<!-- Mobile Bottom Tab Bar -->
+<div class="mobile-tabs" id="mobileTabs">
+    <button class="mobile-tabs__btn mobile-tabs__btn--active" data-panel="panelRooms">
+        💬 <span>Rooms</span>
+    </button>
+    <button class="mobile-tabs__btn" data-panel="panelTopics">
+        📂 <span>Topics</span>
+    </button>
+    <button class="mobile-tabs__btn" data-panel="panelActivity">
+        ⚡ <span>Activity</span>
+    </button>
 </div>
 
 {% endblock %}
