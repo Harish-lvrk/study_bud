@@ -7,6 +7,9 @@
     <div class="profile-header__avatar">{{ user.username|make_list|first }}</div>
     <h1 class="profile-header__name">{{ user.username }}</h1>
     <p class="profile-header__username">@{{ user.username }}</p>
+   {% if user.is_authenticated and user == request.user %}
+    <a href="{% url 'update-user' %}" class="btn btn-primary">Edit Profile</a>
+    {% endif %}
 </div>
 
 <!-- Profile Content Grid -->

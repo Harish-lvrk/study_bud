@@ -21,6 +21,7 @@
                         <strong>{{ request.user.username }}</strong>
                     </span>
                 </div>
+                <a href="{% url 'update-user' %}" class="btn btn--ghost btn--sm" title="Settings">⚙️</a>
                 <a href="{% url 'logout' %}" class="btn btn--ghost btn--sm">Logout</a>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn--primary btn--sm">Login</a>
