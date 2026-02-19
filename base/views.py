@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .froms import RoomForm
+from .forms import RoomForm
 from django.db.models import Q # this is used to filter the rooms by the topic name
 
 
@@ -65,13 +65,16 @@ def room(request,pk):
 @login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()
+
     if request.method == 'POST':
         form = RoomForm(request.POST)
         if form.is_valid():
-            form.save()
+            room = form.save(commit=False)
+            room.host = request.user
+            room.save()
             return redirect('home')
     context = {'form':form}
-    return render(request, 'base/room_from.html', context)
+    return render(request, 'base/room_form.html', context)
 
 
 @login_required(login_url='login')
@@ -86,7 +89,7 @@ def updateRoom(request, pk):
             form.save()
             return redirect('home')
     context = {'form':form}
-    return render(request, 'base/room_from.html', context)
+    return render(request, 'base/room_form.html', context)
 
 
 @login_required(login_url='login')
