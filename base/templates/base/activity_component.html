@@ -4,7 +4,14 @@
     <div class="activity-item" {% if forloop.counter > 10 %}style="display: none;"{% endif %} data-index="{{ forloop.counter }}">
         <div class="activity-item__meta">
             <span class="activity-item__user">
-                <a href="{% url 'user-profile' message.user.id %}">@{{ message.user.username }}</a>
+                <a href="{% url 'user-profile' message.user.id %}" class="activity-item__user-link">
+                    {% if message.user.profile.avatar and message.user.profile.avatar.name != 'avatar.svg' %}
+                        <img src="{{ message.user.profile.avatar.url }}" alt="{{ message.user.username }}" class="activity-item__avatar activity-item__avatar--img">
+                    {% else %}
+                        <div class="activity-item__avatar">{{ message.user.username|make_list|first }}</div>
+                    {% endif %}
+                    @{{ message.user.username }}
+                </a>
             </span>
             <span>{{ message.created|timesince }} ago</span>
         </div>
