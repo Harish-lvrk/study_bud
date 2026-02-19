@@ -7,7 +7,7 @@
 
         <!-- Search (desktop) -->
         <form class="navbar__search" action="{% url 'home' %}" method="GET">
-            <input type="text" name="q" placeholder="Search rooms & topics..." value="{{ q }}">
+            <input type="text" name="q" placeholder="Search rooms &amp; topics..." value="{{ q }}">
         </form>
 
         <!-- User Actions (desktop) -->
@@ -15,7 +15,11 @@
             {% if request.user.is_authenticated %}
                 <div class="navbar__user">
                     <a href="{% url 'user-profile' request.user.id %}">
-                        <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+                        {% if request.user.profile.avatar and request.user.profile.avatar.name != 'avatar.svg' %}
+                            <img src="{{ request.user.profile.avatar.url }}" alt="{{ request.user.username }}" class="navbar__avatar navbar__avatar--img">
+                        {% else %}
+                            <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+                        {% endif %}
                     </a>
                     <span class="navbar__username">
                         <strong>{{ request.user.username }}</strong>
@@ -49,7 +53,7 @@
 
     <!-- Mobile Search -->
     <form class="mobile-drawer__search" action="{% url 'home' %}" method="GET">
-        <input type="text" name="q" placeholder="Search rooms & topics..." value="{{ q }}">
+        <input type="text" name="q" placeholder="Search rooms &amp; topics..." value="{{ q }}">
     </form>
 
     <!-- Mobile Nav Links -->
@@ -68,7 +72,11 @@
 
     {% if request.user.is_authenticated %}
     <div class="mobile-drawer__footer">
-        <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+        {% if request.user.profile.avatar and request.user.profile.avatar.name != 'avatar.svg' %}
+            <img src="{{ request.user.profile.avatar.url }}" alt="{{ request.user.username }}" class="navbar__avatar navbar__avatar--img">
+        {% else %}
+            <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+        {% endif %}
         <span><strong>{{ request.user.username }}</strong></span>
     </div>
     {% endif %}
