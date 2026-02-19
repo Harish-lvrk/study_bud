@@ -4,25 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBud</title>
+    <meta name="description" content="StudyBud — A collaborative study platform by Dhruva Space">
+    <title>StudyBud | Dhruva Space</title>
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'styles/main.css' %}">
 </head>
 <body>
 
+    <!-- Navbar -->
     {% include 'navbar.html' %}
 
+    <!-- Flash Messages -->
     {% if messages %}
-    <ul class="messages">   
-        {% for message in messages %}
-            <li{%if message.tags%} class="{{message.tags}}"{%endif%}>{{message}}</li> <!--li is used for list, this indicates the error message-->
-        {% endfor %}
-    </ul>
+    <div class="main-content">
+        <div class="container">
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     {% endif %}
-    {% block content %}
-  
-        
 
-    {% endblock %}
+    <!-- Main Content -->
+    <div class="main-content fade-in">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('click', function(e) {
+            document.querySelectorAll('.dropdown--open').forEach(function(d) {
+                if (!d.contains(e.target)) d.classList.remove('dropdown--open');
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -1,11 +1,11 @@
-<h3 >Browse Topics</h2>
-        <hr>
-
-        <div>
-            <a href="{% url 'home' %}?q={{topic.name}}">All</a>
-        </div>
-        {% for topic in topics %}
-            <div>
-                <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
-            </div>
-        {% endfor %}
+<h4 class="topics-panel__title">🌌 Browse Topics</h4>
+<div class="topics-list">
+    <a href="{% url 'home' %}" class="topic-item{% if not q %} topic-item--active{% endif %}">
+        All
+    </a>
+    {% for topic in topics %}
+        <a href="{% url 'home' %}?q={{ topic.name }}" class="topic-item{% if q == topic.name %} topic-item--active{% endif %}">
+            {{ topic.name }}
+        </a>
+    {% endfor %}
+</div>

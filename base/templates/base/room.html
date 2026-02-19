@@ -1,57 +1,103 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<style>
-    .room-container {
-        display: grid;
-        grid-template-columns: 3fr 1fr;
-    }
-    .participants {
-        display: flex;
-        flex-direction: column;
-    }   
-</style>
 
-<div class="room-container">
-    <div>
-        <h1>{{room.name}}</h1>
-        <p>{{room.description}}</p>
+<div class="room-layout">
 
-        <div class="comment-wrapper">
-            <h3>Conversations</h3>
-            <hr>
-            {% for message in room_messages %}
-            <div>
-                {% if request.user == message.user %}
-                <a href="{% url 'delete-message' message.id %}">Delete</a>
+    <!-- Chat Panel (Card container) -->
+    <div class="chat-card">
+
+        <!-- Card Header -->
+        <div class="chat-card__header">
+            <div class="chat-card__header-left">
+                <a href="{% url 'home' %}" class="chat-card__back">← </a>
+                <span class="chat-card__label">STUDY ROOM</span>
+            </div>
+            <div class="chat-card__header-right">
+                {% if request.user == room.host %}
+                <div class="dropdown">
+                    <button class="dropdown__trigger" onclick="this.parentElement.classList.toggle('dropdown--open')" title="Options">⋮</button>
+                    <div class="dropdown__menu">
+                        <a href="{% url 'update-room' room.id %}" class="dropdown__item">✏️ Edit Room</a>
+                        <a href="{% url 'delete-room' room.id %}" class="dropdown__item dropdown__item--danger">🗑️ Delete Room</a>
+                    </div>
+                </div>
                 {% endif %}
-                <small>@{{message.user}}  {{message.created|timesince}} ago</small>
-                <p>{{message.body}}</p>
-                <hr>
+            </div>
+        </div>
+
+        <!-- Room Info -->
+        <div class="chat-card__info">
+            <h2 class="chat-card__title">{{ room.name }}</h2>
+            <div class="chat-card__meta">
+                <span class="chat-card__meta-label">HOSTED BY</span>
+                {% if room.host %}
+                    <a href="{% url 'user-profile' room.host.id %}" class="chat-card__host">@{{ room.host.username }}</a>
+                {% else %}
+                    <span class="chat-card__host">@deleted</span>
+                {% endif %}
+            </div>
+            {% if room.topic %}
+                <span class="room-card__topic">{{ room.topic.name }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Scrollable Messages -->
+        <div class="chat-card__messages">
+            {% for message in room_messages %}
+            <div class="chat-msg">
+                <div class="chat-msg__avatar">{{ message.user.username|make_list|first }}</div>
+                <div class="chat-msg__content">
+                    <div class="chat-msg__header">
+                        <a href="{% url 'user-profile' message.user.id %}" class="chat-msg__user">@{{ message.user.username }}</a>
+                        <span class="chat-msg__time">{{ message.created|timesince }} ago</span>
+                    </div>
+                    <p class="chat-msg__body">{{ message.body }}</p>
+                    {% if request.user == message.user %}
+                        <a href="{% url 'delete-message' message.id %}" class="chat-msg__delete" title="Delete message">✕</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="chat-card__empty">
+                <p>No messages yet. Start the conversation! 💬</p>
             </div>
             {% endfor %}
         </div>
 
+        <!-- Fixed Input at Bottom -->
         {% if request.user.is_authenticated %}
-        <div class="comment-form">
-            <form action="" method="POST">
-                {% csrf_token %}
-                <input type="text" name="body" placeholder="Write your message here...">
-                <input type="submit" value="Send">
-            </form>
+        <form class="chat-card__input" method="POST">
+            {% csrf_token %}
+            <input type="text" name="body" placeholder="Write your message here..." autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+        {% else %}
+        <div class="chat-card__login-prompt">
+            <a href="{% url 'login' %}">Login</a> to join the conversation
         </div>
         {% endif %}
+
     </div>
 
-    <div>
-        <h2>Participants</h2>
-        <hr>
-        {% for participant in participants %}
-        <div>   
-            <p>{{participant.username}}</p>
+    <!-- Participants Sidebar -->
+    <div class="participants-card">
+        <h4 class="participants-card__title">PARTICIPANTS <span class="participants-card__count">({{ participants.count }} Joined)</span></h4>
+        <div class="participants-card__list">
+            {% for user in participants %}
+            <a href="{% url 'user-profile' user.id %}" class="participant-row">
+                <div class="participant-avatar">{{ user.username|make_list|first }}</div>
+                <div class="participant-info">
+                    <span class="participant-info__name">{{ user.username }}</span>
+                    <span class="participant-info__handle">@{{ user.username }}</span>
+                </div>
+            </a>
+            {% empty %}
+            <p class="participants-card__empty">No participants yet.</p>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
 </div>
+
 {% endblock %}

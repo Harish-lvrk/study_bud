@@ -1,13 +1,46 @@
-<h3>Recent Activity</h3>
-        <hr>
-        {% for message in recent_messages %}
-            <div>
-                <small><a href="{% url 'user-profile' message.user.id %}">@{{message.user}}</a> {{message.created|timesince}} ago </small>
-                <small>Room: "<a href="{% url 'room' message.room.id %}">{{message.room}}</a>"</small>
-                <p>{{message}}</p>
-                {% if request.user == message.user %}
-                <a href="{% url 'delete-message' message.id %}">Delete</a>
-                {% endif %}
-                <hr>
-            </div>
-        {% endfor %}
+<h4 class="activity-panel__title">📡 Recent Activity</h4>
+<div class="activity-list" id="activityList">
+    {% for message in recent_messages %}
+    <div class="activity-item" {% if forloop.counter > 10 %}style="display: none;"{% endif %} data-index="{{ forloop.counter }}">
+        <div class="activity-item__meta">
+            <span class="activity-item__user">
+                <a href="{% url 'user-profile' message.user.id %}">@{{ message.user.username }}</a>
+            </span>
+            <span>{{ message.created|timesince }} ago</span>
+        </div>
+        <div class="activity-item__room">
+            In "<a href="{% url 'room' message.room.id %}">{{ message.room }}</a>"
+        </div>
+        <div class="activity-item__body">{{ message.body|truncatewords:12 }}</div>
+        {% if request.user == message.user %}
+            <a href="{% url 'delete-message' message.id %}" class="activity-item__delete">✕ Delete</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p style="color: var(--clr-text-muted); font-size: 0.8rem; text-align: center; padding: 1rem;">No recent activity yet.</p>
+    {% endfor %}
+</div>
+
+{% if recent_messages|length > 10 %}
+<button class="activity-load-more" id="activityLoadMore" onclick="loadMoreActivity()">Show More ↓</button>
+{% endif %}
+
+<script>
+(function() {
+    var shown = 10;
+    var items = document.querySelectorAll('#activityList .activity-item');
+    var total = items.length;
+    var btn = document.getElementById('activityLoadMore');
+
+    window.loadMoreActivity = function() {
+        var next = Math.min(shown + 10, total);
+        for (var i = shown; i < next; i++) {
+            items[i].style.display = '';
+        }
+        shown = next;
+        if (shown >= total && btn) {
+            btn.style.display = 'none';
+        }
+    };
+})();
+</script>

@@ -1,15 +1,30 @@
+<nav class="navbar">
+    <div class="container">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="navbar__logo">
+            🚀 <span>Study</span>Bud
+        </a>
 
-<a href="/"> logo</a>
-<form action="{% url 'home' %}" method="GET">
-    <input type="text" name="q" placeholder="Search rooms..." value="{{q}}">
+        <!-- Search -->
+        <form class="navbar__search" action="{% url 'home' %}" method="GET">
+            <input type="text" name="q" placeholder="Search rooms & topics..." value="{{ q }}">
+        </form>
 
-</form>
-
-{% if request.user.is_authenticated %}
-    <p>Hello {{request.user}}</p>
-    <a href="{% url 'logout' %}">Logout</a>
-{% else %}
-    <a href="{% url 'login' %}">Login</a>
-{% endif %}
-
-<hr>
+        <!-- User Actions -->
+        <div class="navbar__actions">
+            {% if request.user.is_authenticated %}
+                <div class="navbar__user">
+                    <a href="{% url 'user-profile' request.user.id %}">
+                        <div class="navbar__avatar">{{ request.user.username|make_list|first }}</div>
+                    </a>
+                    <span>
+                        <strong>{{ request.user.username }}</strong>
+                    </span>
+                </div>
+                <a href="{% url 'logout' %}" class="btn btn--ghost btn--sm">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn--primary btn--sm">Login</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

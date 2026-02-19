@@ -1,36 +1,34 @@
 {% extends 'main.html' %}
 
 {% block content %}
- 
 
-<style>
-    .home-container{
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
-    }
-</style>
+<div class="home-grid">
 
-
-
-<div class="home-container">
-    
+    <!-- Left Sidebar: Topics -->
     <div>
-        {% include 'base/topics_component.html' %}
+        <div class="topics-panel">
+            {% include 'base/topics_component.html' %}
+        </div>
     </div>
 
+    <!-- Center: Feed -->
     <div>
-        <div>
-            <!-- rooms available -->
-            <h5>{{rooms_count}} Rooms Available</h5>
-            <a href="{% url 'create-room' %}">Create Room</a>
+        <div class="feed-header">
+            <span class="feed-header__count">{{ rooms_count }} rooms available</span>
+            <a href="{% url 'create-room' %}" class="btn btn--primary btn--sm">+ Create Room</a>
+        </div>
+        <div class="room-list">
             {% include 'base/feed_component.html' %}
         </div>
     </div>
 
+    <!-- Right Sidebar: Activity -->
     <div>
-        {% include 'base/activity_component.html' %}
+        <div class="activity-panel">
+            {% include 'base/activity_component.html' %}
+        </div>
     </div>
 
 </div>
-        
+
 {% endblock %}

@@ -2,15 +2,22 @@
 
 {% block content %}
 
-<div>
-
-    <form action="" method="POST">
-
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{obj}}"?</p>
-        <a href="{{request.META.HTTP_REFERER}}">Cancel</a> <!-- this is used to go back to the previous page -->
-        <input type="submit" value="Confirm Delete">
-    </form>
+<div class="delete-wrapper">
+    <div class="delete-card">
+        <div class="delete-card__icon">⚠️</div>
+        <h2 class="delete-card__title">Confirm Deletion</h2>
+        <p class="delete-card__text">
+            Are you sure you want to delete <strong>"{{ obj }}"</strong>?<br>
+            This action cannot be undone.
+        </p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="delete-card__actions">
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn--ghost">Cancel</a>
+                <input type="submit" value="Delete" class="btn btn--danger">
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

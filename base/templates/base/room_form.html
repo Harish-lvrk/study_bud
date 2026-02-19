@@ -2,12 +2,18 @@
 
 {% block content %}
 
-<div>
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Submit">
-    </form>
+<div class="form-wrapper">
+    <div class="form-card">
+        <h2 class="form-card__title">🛸 Room Station</h2>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-card__actions">
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn--ghost">Cancel</a>
+                <input type="submit" value="Submit" class="form-card__submit">
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

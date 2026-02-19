@@ -2,23 +2,40 @@
 
 {% block content %}
 
-<style>
-    .profile-container{
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
-    }
-</style>
-    <h1>{{user.username}}</h1>
-    <div class="profile-container">
-        <div>
+<!-- Profile Header -->
+<div class="profile-header">
+    <div class="profile-header__avatar">{{ user.username|make_list|first }}</div>
+    <h1 class="profile-header__name">{{ user.username }}</h1>
+    <p class="profile-header__username">@{{ user.username }}</p>
+</div>
+
+<!-- Profile Content Grid -->
+<div class="home-grid">
+
+    <!-- Topics -->
+    <div>
+        <div class="topics-panel">
             {% include 'base/topics_component.html' %}
         </div>
-        <div>
+    </div>
+
+    <!-- User's Rooms -->
+    <div>
+        <div class="feed-header">
+            <span class="feed-header__count">{{ user.username }}'s Rooms</span>
+        </div>
+        <div class="room-list">
             {% include 'base/feed_component.html' %}
         </div>
-        <div>
-          {% include 'base/activity_component.html' %}
+    </div>
+
+    <!-- User's Activity -->
+    <div>
+        <div class="activity-panel">
+            {% include 'base/activity_component.html' %}
         </div>
     </div>
+
+</div>
 
 {% endblock %}
