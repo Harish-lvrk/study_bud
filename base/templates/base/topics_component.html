@@ -1,5 +1,9 @@
 <h4 class="topics-panel__title">🌌 Browse Topics</h4>
-<div class="topics-list">
+
+<!-- Topic Search -->
+<input type="text" class="topics-search" id="topicSearch" placeholder="Search topics..." oninput="filterTopics()">
+
+<div class="topics-list" id="topicsList">
     <a href="{% url 'home' %}" class="topic-item{% if not q %} topic-item--active{% endif %}">
         All
     </a>
@@ -9,3 +13,18 @@
         </a>
     {% endfor %}
 </div>
+
+<script>
+function filterTopics() {
+    var query = document.getElementById('topicSearch').value.toLowerCase();
+    var items = document.querySelectorAll('#topicsList .topic-item');
+    items.forEach(function(item) {
+        var text = item.textContent.trim().toLowerCase();
+        if (text === 'all') {
+            item.style.display = query ? 'none' : '';
+        } else {
+            item.style.display = text.includes(query) ? '' : 'none';
+        }
+    });
+}
+</script>

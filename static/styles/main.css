@@ -342,6 +342,28 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid var(--clr-border);
 }
 
+.topics-search {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--clr-border);
+    background: var(--clr-bg-light);
+    color: var(--clr-text);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.topics-search:focus {
+    border-color: var(--clr-accent);
+}
+
+.topics-search::placeholder {
+    color: var(--clr-text-muted);
+}
+
 .topics-list {
     display: flex;
     flex-direction: column;
